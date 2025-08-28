@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ToggleButton from "../ToggleButton/ToggleButton";
 import AttendanceSummary from "../AttendanceSummary/AttendanceSummary";
 import CardWrapper from "../CardWrapper/CardWrapper";
+import "../DashBoard/DashBoard.css";
 
 export default function DashBoard() {
   const [students, setStudents] = useState([]);
@@ -43,16 +44,11 @@ export default function DashBoard() {
     );
   };
 
-
   return (
     <div className="dashboard-container">
       <h2 className="heading"> Class Attendance</h2>
 
       {/* Bulk Action Buttons */}
-      <div style={{ margin: "20px 0", display: "flex", gap: "10px", justifyContent: "center" }}>
-        <button onClick={() => handleBulkUpdate("Present")}>Mark All Present</button>
-        <button onClick={() => handleBulkUpdate("Absent")}>Mark All Absent</button>
-      </div>
 
       <div className="studentslist">
         {Array.isArray(students) &&
@@ -65,6 +61,28 @@ export default function DashBoard() {
               />
             </div>
           ))}
+      </div>
+      <div
+        style={{
+          margin: "10px",
+          display: "flex",
+          gap: "10px",
+          justifyContent: "flex-end",
+          marginRight: "13px",
+        }}
+      >
+        <button
+          className="mark-present"
+          onClick={() => handleBulkUpdate("Present")}
+        >
+          Mark All Present
+        </button>
+        <button
+          className="mark-absent"
+          onClick={() => handleBulkUpdate("Absent")}
+        >
+          Mark All Absent
+        </button>
       </div>
       <CardWrapper>
         <AttendanceSummary students={students} />
