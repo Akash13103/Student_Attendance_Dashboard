@@ -1,32 +1,25 @@
 import React from "react";
-export default function ToggleButton({ status, onToggle }) {
-  const getButtonProps = () => {
-    switch (status) {
-      case "Present":
-        return {
-          className: "present",
-          label: "Present",
-        };
-      case "Absent":
-        return {
-          className: "absent",
-          label: "Absent",
-        };
-      default: // "Not Marked"
-        return {
-          className: "not-marked",
-          label: "Not Marked",
-        };
-    }
-  };
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Box from "@mui/material/Box";
 
-  const buttonProps = getButtonProps();
+export default function ToggleButton({ status, onToggle }) {
+  // Determine the color of the switch based on the status
+  const switchColor = status === "Present" ? "success" : "error";
+
   return (
-    <button
-      onClick={onToggle}
-      className={`buttonstatus ${buttonProps.className}`}
-    >
-      {buttonProps.label}
-    </button>
+    <Box sx={{ minWidth: 120, textAlign: "right" }}>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={status === "Present"}
+            onChange={onToggle}
+            color={switchColor}
+          />
+        }
+        label={status}
+        labelPlacement="start"
+      />
+    </Box>
   );
 }

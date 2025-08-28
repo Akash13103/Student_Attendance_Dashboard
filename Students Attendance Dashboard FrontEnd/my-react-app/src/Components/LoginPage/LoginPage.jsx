@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../LoginPage/LoginPage.css";
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const handleSubmit = async () => {
     try {
       const jwtToken = await axios.post(
@@ -16,37 +17,39 @@ const LoginPage = () => {
       );
       console.log(username, password);
       const response = jwtToken.data.token;
-      console.log("Token:",response);
+      console.log("Token:", response);
       if (response) {
         localStorage.setItem("token", response);
-        navigate('/dashboard');
+        navigate("/dashboard");
       }
     } catch (error) {
       console.log("Error:", error);
     }
   };
   return (
-    <div>
-      <h3>Teacher Login</h3>
-      <h4>Email</h4>
-      <input
-        value={username}
-        placeholder="Enter your username"
-        onChange={(e) => {
-          setUsername(e.target.value);
-        }}
-      ></input>
-      <h4>Password</h4>
-      <input
-        value={password}
-        placeholder="Enter your password"
-        onChange={(e) => {
-          setPassword(e.target.value);
-        }}
-      ></input>
-      <button type="submit" onClick={handleSubmit}>
-        Login
-      </button>
+    <div className="main-login-container">
+      <div className="login-container">
+        <h3>Teacher Login</h3>
+        <h4>Email</h4>
+        <input
+          value={username}
+          placeholder="Enter your username"
+          onChange={(e) => {
+            setUsername(e.target.value);
+          }}
+        ></input>
+        <h4>Password</h4>
+        <input
+          value={password}
+          placeholder="Enter your password"
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+        ></input>
+        <button className="login-button" type="submit" onClick={handleSubmit}>
+          Login
+        </button>
+      </div>
     </div>
   );
 };

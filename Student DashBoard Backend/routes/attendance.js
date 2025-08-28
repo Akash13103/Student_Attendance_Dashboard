@@ -7,7 +7,9 @@ router.post("/", verifyToken, async (req, res) => {
   const { records } = req.body; // [{studentId, status}]
   const classId = req.user.classId;
 
-  await Attendance.insertMany(records.map((r) => ({ ...r, classId, date: new Date() })));
+  await Attendance.insertMany(
+    records.map((r) => ({ ...r, classId, date: new Date() }))
+  );
 
   res.json({ message: "Attendance saved" });
 });
@@ -36,4 +38,6 @@ router.get("/summary", verifyToken, async (req, res) => {
   const summary = await Attendance.aggregate(pipeline);
   res.json(summary);
 });
+
+
 module.exports = router;

@@ -7,7 +7,11 @@ const studentRouter = require("./routes/student.js");
 const attendanceRouter = require("./routes/attendance.js");
 const dotenv = require("dotenv");
 dotenv.config();
-app.use(cors());
+app.use(cors({
+    origin: "*", // Allow all origins
+    methods: ["GET", "POST", "PUT", "DELETE"], // Explicitly allow DELETE
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }));
 app.use(express.json());
 const PORT = 7000;
 // Routes

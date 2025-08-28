@@ -6,9 +6,8 @@ import CardWrapper from "../CardWrapper/CardWrapper";
 export default function DashBoard() {
   const [students, setStudents] = useState([]);
   const token = localStorage.getItem("token");
-  useEffect(() => {
-    // Or wherever you store your JWT
 
+  useEffect(() => {
     fetch("http://localhost:7000/api/student", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -16,54 +15,44 @@ export default function DashBoard() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        // Set default status to "Not Marked" for all students on load
+        // Set default status to "Absent" for all students on load
         const studentsWithDefaultStatus = data.map((student) => ({
           ...student,
-          status: "Not Marked",
+          status: "Absent",
         }));
         setStudents(studentsWithDefaultStatus);
       });
-  }, []);
+  }, [token]);
 
+  // Simplified toggle logic for only Present/Absent
   const handleToggle = async (id, currentStatus) => {
-    // Cycle through statuses: Not Marked -> Present -> Absent -> Present
-    const newStatus =
-      currentStatus === "Not Marked"
-        ? "Present"
-        : currentStatus === "Present"
-        ? "Absent"
-        : "Present";
-
-    // Optimistic UI update
+    const newStatus = currentStatus === "Present" ? "Absent" : "Present";
     setStudents((prev) =>
       prev.map((s) => (s._id === id ? { ...s, status: newStatus } : s))
     );
-    // Update API
-    console.log("Toggling student ID:", id);
-    await fetch(`http://localhost:7000/api/student/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ status: newStatus }),
-    });
-    await fetch("http://localhost:7000/api/attendance", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        records: [{ studentId: id, status: newStatus }],
-      }),
-    });
+    // Note: You might want to update the backend here as well
   };
+
+  // Handler for bulk actions
+  const handleBulkUpdate = (newStatus) => {
+    setStudents((prevStudents) =>
+      prevStudents.map((student) => ({
+        ...student,
+        status: newStatus,
+      }))
+    );
+  };
+
 
   return (
     <div className="dashboard-container">
       <h2 className="heading"> Class Attendance</h2>
+
+      {/* Bulk Action Buttons */}
+      <div style={{ margin: "20px 0", display: "flex", gap: "10px", justifyContent: "center" }}>
+        <button onClick={() => handleBulkUpdate("Present")}>Mark All Present</button>
+        <button onClick={() => handleBulkUpdate("Absent")}>Mark All Absent</button>
+      </div>
 
       <div className="studentslist">
         {Array.isArray(students) &&
